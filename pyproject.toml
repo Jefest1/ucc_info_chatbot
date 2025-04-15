@@ -1,0 +1,13 @@
+[project]
+name = "ucc-info-chatbot"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "crawl4ai>=0.5.0.post8",
+    "langchain>=0.3.23",
+    "langchain-community>=0.3.21",
+    "langchain-groq>=0.3.2",
+    "pinecone>=6.0.2",
+]
