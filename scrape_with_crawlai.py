@@ -70,11 +70,11 @@ async def return_docs():
 
     filter_chain = FilterChain([
         # Only follow URLs with specific patterns
-        URLPatternFilter(patterns=["*admission-notices*", "*news*",
-                         "*vcs-desk*", "*announcements*", "*press-releases"]),
+        # URLPatternFilter(patterns=["*admission-notices*", "*news*",
+        #  "*vcs-desk*", "*announcements*", "*press-releases*"]),
 
         # Only crawl specific domains
-        DomainFilter(allowed_domains=["cans.ucc.edu.gh", "ces.ucc.edu.gh"]),
+        DomainFilter(allowed_domains=["ucc.edu.gh", "*.ucc.edu.gh"]),
 
         # Only include specific content types
         ContentTypeFilter(allowed_types=["text/html"])

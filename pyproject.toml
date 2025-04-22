@@ -9,5 +9,7 @@ dependencies = [
     "langchain>=0.3.23",
     "langchain-community>=0.3.21",
     "langchain-groq>=0.3.2",
-    "pinecone>=6.0.2",
+    "langchain-openai>=0.3.14",
+    "langchain-qdrant>=0.2.0",
+    "openai>=1.74.0",
 ]
