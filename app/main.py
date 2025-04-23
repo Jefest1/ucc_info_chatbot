@@ -5,10 +5,9 @@ import sys
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 
-from app.utils.vectorize import ingest_docs
+from app.retrieval_gen.rag import run_rag
 
-def main():
-    print("Hello from ucc-info-chatbot!")
-
-if __name__ == "__main__":
-    ingest_docs()
+answer = run_rag("In which year was ucc founded, who founded it and what are some of the courses you can take at ucc?")
+print(answer["answer"])
+for src in answer["context"]:
+    print("•", src.metadata["url"])

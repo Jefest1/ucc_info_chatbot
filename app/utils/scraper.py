@@ -1,6 +1,12 @@
+import os
+import sys
+
+# Add the project root directory to Python path
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, project_root)
+
 import asyncio
 from typing import List
-from langchain.document_loaders import AsyncChromiumLoader
 from langchain.schema import Document
 from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig
 from crawl4ai.deep_crawling import DFSDeepCrawlStrategy

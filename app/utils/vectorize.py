@@ -1,12 +1,19 @@
+import os
+import sys
+project_root = os.path.dirname(os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, project_root)
+
 from scraper import run_crawl
 from app.config.settings import settings
-import logging
-from logger import setup_logging
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_qdrant import QdrantVectorStore
-from qdrant_client import QdrantClient
-from qdrant_client.http.models import Distance, VectorParams
 from langchain_openai import OpenAIEmbeddings
+from qdrant_client.http.models import Distance, VectorParams
+from qdrant_client import QdrantClient
+from langchain_qdrant import QdrantVectorStore
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from logger import setup_logging
+import logging
+
 
 # Initialize root logger
 setup_logging()
@@ -88,7 +95,8 @@ ACADEMIC_PROGRAMMES = [
     f"https://ucc.edu.gh/main/academic-programmes/all?page={i}" for i in range(14)]
 ALL_URLS = STATIC_URLS + NEWS_PAGES + ACADEMIC_PROGRAMMES
 
-embeddings = OpenAIEmbeddings(model="text-embedding-3-small")  
+embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+
 
 def ingest_docs():
     logger.info("Starting full crawl of %d URLs", len(ALL_URLS))
@@ -100,18 +108,17 @@ def ingest_docs():
 
     logger.info("Retrieved %d documents from crawling", len(raw_documents))
 
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1300,
-        chunk_overlap=200,
-        separators=["\n\n", "\n", ".", " ", ""]
-    )
-    documents = text_splitter.split_documents(raw_documents)
-    logger.info("Split into %d chunks", len(documents))
+    # text_splitter = RecursiveCharacterTextSplitter(
+    #     chunk_size=1300,
+    #     chunk_overlap=200,
+    #     separators=["\n\n", "\n", ".", " ", ""]
+    # )
+    # documents = text_splitter.split_documents(raw_documents)
+    # logger.info("Split into %d chunks", len(documents))
 
-    logger.info("Adding %d chunks to Qdrant", len(documents))
     try:
         vector_store = QdrantVectorStore.from_documents(
-            documents,
+            raw_documents,
             embeddings,
             collection_name=settings.QDRANT_COLLECTION_NAME,
             url=settings.QDRANT_URL,
@@ -125,6 +132,7 @@ def ingest_docs():
     except Exception as e:
         logger.error("Error loading documents to Qdrant: %s", str(e))
         raise
+
 
 if __name__ == "__main__":
     ingest_docs()
