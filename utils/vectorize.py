@@ -20,13 +20,18 @@ setup_logging()
 logger = logging.getLogger(__name__)
 
 # create collection if it doesn't exist
-client = QdrantClient(url="https://e310ee91-5952-4d0b-ae43-7f0487942aaa.eu-west-2-0.aws.cloud.qdrant.io:6333", api_key=settings.QDRANT_API_KEY)
-collection_name = "ucc_chatbot"
-if client.get_collection(collection_name) is None:
-    client.create_collection(
-        collection_name=collection_name,
-        vectors_config=VectorParams(size=1536, distance=Distance.COSINE),
-    )
+collection_name = settings.QDRANT_COLLECTION_NAME
+client = QdrantClient(url=settings.QDRANT_URL, api_key=settings.QDRANT_API_KEY)
+try:
+    client.get_collection(collection_name)
+except Exception as e:
+    if "Not found" in str(e):
+        client.create_collection(
+            collection_name=collection_name,
+            vectors_config=VectorParams(size=1536, distance=Distance.COSINE),
+        )
+    else:
+        raise e
 
 # 50 static pages: top‑level UCC URLs (excluding news pagination)
 STATIC_URLS = [
@@ -103,8 +108,8 @@ def ingest_docs():
     logger.info("Retrieved %d documents from crawling", len(raw_documents))
 
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=600,
-        chunk_overlap=50,
+        chunk_size=1300,
+        chunk_overlap=200,
         separators=["\n\n", "\n", ".", " ", ""]
     )
     documents = text_splitter.split_documents(raw_documents)
@@ -115,9 +120,12 @@ def ingest_docs():
         vector_store = QdrantVectorStore.from_documents(
             documents,
             embeddings,
-            collection_name=collection_name,
-            url="https://e310ee91-5952-4d0b-ae43-7f0487942aaa.eu-west-2-0.aws.cloud.qdrant.io:6333",
-            api_key=settings.QDRANT_API_KEY
+            collection_name=settings.QDRANT_COLLECTION_NAME,
+            url=settings.QDRANT_URL,
+            api_key=settings.QDRANT_API_KEY,
+            timeout=240,
+            batch_size=100,
+            prefer_grpc=True
         )
         logger.info("Successfully loaded documents to Qdrant")
         return vector_store
