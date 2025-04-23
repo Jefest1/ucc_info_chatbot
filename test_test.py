@@ -1,8 +1,8 @@
 from unittest.mock import patch
 import pytest
 from qdrant_client import QdrantClient
-from utils.vectorize import ingest_docs
-from config.settings import settings
+from app.utils.vectorize import ingest_docs
+from app.config.settings import settings
 
 
 @pytest.fixture
@@ -22,7 +22,7 @@ def test_qdrant_client_connection(qdrant_client_fixture):
         pytest.fail(f"Qdrant client connection failed: {e}")
 
 
-@patch("utils.vectorize.ingest_docs")
+@patch("app.utils.vectorize.ingest_docs")
 def test_ingest_docs(mock_ingest_docs):
     ingest_docs()
     mock_ingest_docs.assert_called_once()

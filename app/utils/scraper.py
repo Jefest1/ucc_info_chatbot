@@ -1,13 +1,20 @@
 import asyncio
-import logging
-from crawl4ai import AsyncWebCrawler, CrawlerRunConfig, BrowserConfig
+from typing import List
+from langchain.document_loaders import AsyncChromiumLoader
+from langchain.schema import Document
+from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig
 from crawl4ai.deep_crawling import DFSDeepCrawlStrategy
-from crawl4ai.deep_crawling.filters import FilterChain, DomainFilter, ContentTypeFilter
-from langchain.docstore.document import Document
-from dedup import is_duplicate
+from crawl4ai.deep_crawling.filters import (
+    FilterChain,
+    DomainFilter,
+    ContentTypeFilter
+)
+from app.config.settings import settings
+import logging
+from logger import setup_logging
 
+# Initialize root logger
 logger = logging.getLogger(__name__)
-
 
 class Crawl4AILoader:
     def __init__(self, run_config: CrawlerRunConfig = None, browser_config: BrowserConfig = None):
