@@ -43,7 +43,7 @@ def run_rag(query: str, chat_history: List[Dict[str, Any]] = []):
     stuff_chain = create_stuff_documents_chain(chat, qa_prompt)
     history_aware_retriever = create_history_aware_retriever(
         llm=chat,
-        retriever=vector_store.as_retriever(search_kwargs={"k": 4}),
+        retriever=vector_store.as_retriever(search_kwargs={"k": 3}),
         prompt=rephrase_prompt,
     )
     qa_chain = create_retrieval_chain(

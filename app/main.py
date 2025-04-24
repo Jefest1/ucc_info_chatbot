@@ -5,9 +5,25 @@ import sys
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 
-from app.retrieval_gen.rag import run_rag
+from fastapi import FastAPI, responses
+from fastapi.middleware.cors import CORSMiddleware
+from app.api import routes
 
-answer = run_rag("In which year was ucc founded, who founded it and what are some of the courses you can take at ucc?")
-print(answer["answer"])
-for src in answer["context"]:
-    print("•", src.metadata["url"])
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
+
+
+
+@app.get("/", include_in_schema=False)
+async def redirect_to_docs():
+    return responses.RedirectResponse(url="/docs", status_code=302)
+
+
+app.include_router(routes.router, prefix="/api")
