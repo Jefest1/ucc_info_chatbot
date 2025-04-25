@@ -36,6 +36,6 @@ jobs:
       - name: Restart ACI to pull latest image
         run: |
           az container restart \
-            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --resource-group ucc-rag-info \
             --name ucc-chatbot-ci
 
