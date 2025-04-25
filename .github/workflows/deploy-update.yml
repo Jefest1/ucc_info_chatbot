@@ -33,11 +33,9 @@ jobs:
           docker build -t $ACR_LOGIN_SERVER/ucc-info-chatbot:$IMAGE_TAG .
           docker push    $ACR_LOGIN_SERVER/ucc-info-chatbot:$IMAGE_TAG
 
-      - name: Update ACI with new image
+      - name: Restart ACI to pull latest image
         run: |
-          IMAGE_TAG=${{ github.sha }}
-          az container update \
+          az container restart \
             --resource-group ${{ env.RESOURCE_GROUP }} \
-            --name ucc-chatbot-ci \
-            --image $ACR_LOGIN_SERVER/ucc-info-chatbot:$IMAGE_TAG \
-            --os-type Linux
+            --name ucc-chatbot-ci
+
