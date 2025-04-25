@@ -38,24 +38,29 @@ COPY --from=builder /usr/local /usr/local
 COPY --from=builder /bin/uv /bin/uv
 
 # Copy source code
-COPY --from=builder /app /app
+COPY . .
+
+# Verify file structure for debugging
+RUN find /app -type f -name "*.py" | sort
 
 # Expose port
 EXPOSE 8000
 
 # Set environment variables
-ENV HOST=0.0.0.0
-ENV PORT=8000
 ENV PYTHONPATH=/app
 
 # Create non-root user
-RUN addgroup --system mygroup
-RUN adduser --system --ingroup mygroup myuser
+RUN addgroup --system mygroup && \
+    adduser --system --ingroup mygroup myuser
+
+# Make sure permissions are correctly set
+RUN chown -R myuser:mygroup /app
+
 USER myuser
 
 # Health check
 HEALTHCHECK --interval=5m --timeout=3s \
-  CMD curl -f http://localhost:$PORT/ || exit 1
+  CMD curl -f http://localhost:8000/ || exit 1
 
-# Run application
-CMD ["uvicorn", "app.main:app", "--host", "$HOST", "--port", "$PORT"]
+# Run application - explicit path
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
