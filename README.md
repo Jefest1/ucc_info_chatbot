@@ -4,32 +4,32 @@
 
 This project implements a chatbot that provides information about the University of Cape Coast (UCC). It leverages Retrieval-Augmented Generation (RAG) to answer user queries based on a knowledge base of UCC-related documents. The chatbot is built using FastAPI, Langchain, and Qdrant for efficient information retrieval and response generation.
 
-## Repository
-
-[https://github.com/Jefest1/ucc_info_chatbot](https://github.com/Jefest1/ucc_info_chatbot)
 
 ## Setup
 
 1.  Clone the repository.
-2.  Install uv:
+    ```
+    git clone [https://github.com/Jefest1/ucc_info_chatbot](https://github.com/Jefest1/ucc_info_chatbot)
+    ```
+3.  Install uv:
 
     ```bash
     pip install uv
     ```
 
-3.  Create a virtual environment using uv:
+4.  Create a virtual environment using uv:
 
     ```bash
     uv venv
     source venv/bin/activate  # On Linux/macOS
     # venv\Scripts\activate  # On Windows
     ```
-4.  Install the dependencies:
+5.  Install the dependencies:
 
     ```bash
     uv sync
     ```
-5.  Create a `.env` file with the following variables:
+6.  Create a `.env` file with the following variables:
 
     ```
     GROQ_API_KEY=<your_groq_api_key>
