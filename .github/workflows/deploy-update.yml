@@ -1,0 +1,41 @@
+name: Deploy & Update ACI
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
+  ACR_LOGIN_SERVER: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+
+jobs:
+  deploy-and-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: ACR Login
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{ env.ACR_LOGIN_SERVER }}
+
+      - name: Build & Push Docker image
+        run: |
+          IMAGE_TAG=${{ github.sha }}
+          docker build -t $ACR_LOGIN_SERVER/ucc-info-chatbot:$IMAGE_TAG .
+          docker push    $ACR_LOGIN_SERVER/ucc-info-chatbot:$IMAGE_TAG
+
+      - name: Update ACI with new image
+        run: |
+          IMAGE_TAG=${{ github.sha }}
+          az container update \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --name ucc-chatbot-ci \
+            --image $ACR_LOGIN_SERVER/ucc-info-chatbot:$IMAGE_TAG \
+            --os-type Linux
