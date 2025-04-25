@@ -46,6 +46,7 @@ EXPOSE 8000
 # Set environment variables
 ENV HOST=0.0.0.0
 ENV PORT=8000
+ENV PYTHONPATH=/app
 
 # Create non-root user
 RUN addgroup --system mygroup
