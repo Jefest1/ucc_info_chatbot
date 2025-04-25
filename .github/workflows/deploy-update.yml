@@ -37,5 +37,5 @@ jobs:
         run: |
           az container restart \
             --resource-group ucc-rag-info \
-            --name ucc-chatbot-ci
+            --name ucc-info-chatbot-ci
 
