@@ -9,7 +9,7 @@ This project implements a chatbot that provides information about the University
 
 1.  Clone the repository.
     ```
-    git clone [https://github.com/Jefest1/ucc_info_chatbot](https://github.com/Jefest1/ucc_info_chatbot)
+    git clone https://github.com/Jefest1/ucc_info_chatbot
     ```
 3.  Install uv:
 
