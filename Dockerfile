@@ -3,7 +3,7 @@
 #### Builder Stage ####
 FROM python:3.12-slim-bookworm AS builder
 
-# Copy uv binary from Astral’s distroless image
+# Copy uv binary from Astral's distroless image
 COPY --from=ghcr.io/astral-sh/uv:0.6 /uv /bin/uv
 
 # Set environment variables
@@ -38,7 +38,7 @@ COPY --from=builder /usr/local /usr/local
 COPY --from=builder /bin/uv /bin/uv
 
 # Copy source code
-COPY . .
+COPY --from=builder /app /app
 
 # Expose port
 EXPOSE 8000
