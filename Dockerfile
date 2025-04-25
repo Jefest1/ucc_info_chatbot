@@ -48,7 +48,8 @@ ENV HOST=0.0.0.0
 ENV PORT=8000
 
 # Create non-root user
-RUN adduser -D myuser
+RUN addgroup --system mygroup
+RUN adduser --system --ingroup mygroup myuser
 USER myuser
 
 # Health check
