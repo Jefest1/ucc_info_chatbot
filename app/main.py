@@ -1,10 +1,6 @@
 import os
 import sys
 
-# Add the project root directory to Python path
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, project_root)
-
 from fastapi import FastAPI, responses
 from fastapi.middleware.cors import CORSMiddleware
 from app.api import routes
