@@ -39,5 +39,6 @@ COPY . .
 # 8. Expose FastAPI port
 EXPOSE 8000
 
-# 9. Start via uv (now available in PATH)
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# 9. Start via uvicorn
+WORKDIR /app
+CMD ["/usr/local/bin/uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
