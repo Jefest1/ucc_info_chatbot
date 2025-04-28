@@ -1,24 +1,20 @@
-# Use the official Python slim base image (small, production-oriented)
+# syntax=docker/dockerfile:1
 FROM python:3.12-slim
 
-# Set the working directory to the container root (project root)
 WORKDIR /
 
-# Prevent Python from writing .pyc files and enable unbuffered output
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# Install the 'uv' tool for managing Python dependencies
+# 1. Install uv for build-time dependency syncing
 RUN pip install --no-cache-dir uv
 
-# Copy only dependency files first (leverage Docker cache)
+# 2. Copy dependency manifests and install dependencies
 COPY pyproject.toml uv.lock ./
-
-# Install dependencies from the lockfile (exact versions, no dev dependencies)
 RUN uv sync --frozen --no-dev
 
-# Copy the entire app code (uses .dockerignore to exclude .git, .venv, etc.)
+# 3. Copy application code
 COPY . .
 
-# Run the FastAPI app with Uvicorn via 'uv run'
-CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# 4. Expose service port
+EXPOSE 8000
+
+# 5. Run Uvicorn directly (no runtime venv creation)
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
