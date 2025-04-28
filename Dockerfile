@@ -1,37 +1,16 @@
 # syntax=docker/dockerfile:1
-
 FROM python:3.12-slim-bookworm
 
-# Copy uv binary from Astral's distroless image
+# 1. Copy the uv binary
 COPY --from=ghcr.io/astral-sh/uv:0.6 /uv /bin/uv
 
-# Set environment variables
-ENV UV_LINK_MODE=copy \
-    UV_COMPILE_BYTECODE=1 \
-    PYTHONPATH=/
-
-# Working directory
+# 2. Set workdir and bring in your entire source
 WORKDIR /app
-
-# Copy application code
 COPY . .
 
-# Install dependencies
-RUN --mount=type=cache,target=/root/.cache/uv \
-    /bin/uv sync --frozen --no-dev
+# 3. Install all dependencies in one step
+RUN uv sync --frozen --no-dev
 
-# Verify file structure for debugging
-RUN find . -type f -name "*.py" | grep -v "__pycache__" | sort
-
-# Expose port
+# 4. Expose and run
 EXPOSE 8000
-
-# Create non-root user
-RUN addgroup --system mygroup && \
-    adduser --system --ingroup mygroup myuser && \
-    chown -R myuser:mygroup /app
-
-USER myuser
-
-# Run application
-CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uv", "run", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
