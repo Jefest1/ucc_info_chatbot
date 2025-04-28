@@ -30,7 +30,7 @@ jobs:
       - name: Build & Push Docker image
         run: |
           IMAGE_TAG=${{ github.sha }}
-          docker build -t $ACR_LOGIN_SERVER/ucc-info-chatbot:$IMAGE_TAG .
+          docker build --no-cache -t $ACR_LOGIN_SERVER/ucc-info-chatbot:$IMAGE_TAG .
           docker push    $ACR_LOGIN_SERVER/ucc-info-chatbot:$IMAGE_TAG
 
       - name: Restart ACI to pull latest image
