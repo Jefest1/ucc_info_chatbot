@@ -13,4 +13,5 @@ dependencies = [
     "langchain-openai>=0.3.14",
     "langchain-qdrant>=0.2.0",
     "openai>=1.74.0",
+    "pydantic-settings>=2.9.1",
 ]
