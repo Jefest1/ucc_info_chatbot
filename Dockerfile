@@ -1,23 +1,32 @@
 # syntax=docker/dockerfile:1
-FROM python:3.12-slim
+FROM python:3.11
+
+# The installer requires curl (and certificates) to download the release archive
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates
+
+# Download the latest installer
+ADD https://astral.sh/uv/0.4.20/install.sh /uv-installer.sh
+
+# Run the installer then remove it
+RUN sh /uv-installer.sh && rm /uv-installer.sh
+
+# Ensure the installed binary is on the `PATH`
+ENV PATH="/root/.cargo/bin/:$PATH"
+ENV PATH="/app/.venv/bin:$PATH"
 
 WORKDIR /app
 
-# 1. Install uv for build-time dependency syncing
-RUN pip install --no-cache-dir uv
-
-# 2. Copy dependency manifests and install dependencies
+# Add dependency files
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-dev
 
-# 3. Install fastapi-cli for running the application
-RUN pip install --no-cache-dir fastapi-cli
+# Install dependencies
+RUN uv sync --frozen
 
-# 4. Copy application code
+# Copy application code
 COPY . .
 
-# 5. Expose service port
+# Expose service port
 EXPOSE 8000
 
-# 6. Run FastAPI with CLI
-CMD ["fastapi", "run"]
+# Run using uv and uvicorn
+CMD [ "uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000" ]
