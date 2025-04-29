@@ -1,13 +1,8 @@
-from fastapi import FastAPI, Depends, HTTPException, status, APIRouter, Cookie
+from typing import Dict, Optional
+from fastapi import Depends, HTTPException, status, APIRouter, Cookie
 from fastapi.responses import JSONResponse, Response
-from typing import Dict, Any, List
-from fastapi.middleware import Middleware
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi import Header
-from typing import Optional
-from app.retrieval_gen.rag import run_rag
+from ..retrieval_gen.rag import run_rag
 from langchain.memory import ConversationBufferMemory
-from langchain.schema import BaseMessage
 import uuid
 
 router = APIRouter()

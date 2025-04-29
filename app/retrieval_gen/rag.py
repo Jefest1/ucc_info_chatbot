@@ -9,7 +9,7 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_qdrant import QdrantVectorStore
 from qdrant_client import QdrantClient
 
-from app.config.settings import settings
+from ..config.settings import settings
 
 
 def run_rag(query: str, chat_history: List[Dict[str, Any]] = []):

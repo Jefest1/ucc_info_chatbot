@@ -1,9 +1,6 @@
-import os
-import sys
-
 from fastapi import FastAPI, responses
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import routes
+from .api.routes import routes
 
 app = FastAPI()
 
@@ -22,4 +19,4 @@ async def redirect_to_docs():
     return responses.RedirectResponse(url="/docs", status_code=302)
 
 
-app.include_router(routes.router, prefix="/api")
+app.include_router(routes, prefix="/api")
