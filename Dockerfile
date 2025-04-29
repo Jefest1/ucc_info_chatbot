@@ -1,8 +1,17 @@
 # syntax=docker/dockerfile:1
 FROM python:3.11
 
-# The installer requires curl (and certificates) to download the release archive
-RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates
+# Install build dependencies and tools
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    ca-certificates \
+    build-essential \
+    clang \
+    gcc \
+    g++ \
+    libc-dev \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
 
 # Download the latest installer
 ADD https://astral.sh/uv/0.4.20/install.sh /uv-installer.sh
