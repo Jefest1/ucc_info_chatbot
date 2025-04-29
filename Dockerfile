@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 FROM python:3.12-slim
 
-WORKDIR /
+WORKDIR /app
 
 # 1. Install uv for build-time dependency syncing
 RUN pip install --no-cache-dir uv
