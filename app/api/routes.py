@@ -30,6 +30,7 @@ async def chat_ucc(query: str, response: Response, session_id: str = Depends(get
 
     Returns:
         JSONResponse: The response from the RAG system.
+        
     """
     try:
         if session_id not in SESSION_MEMORY:
