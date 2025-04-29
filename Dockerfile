@@ -10,11 +10,14 @@ RUN pip install --no-cache-dir uv
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev
 
-# 3. Copy application code
+# 3. Install fastapi-cli for running the application
+RUN pip install --no-cache-dir fastapi-cli
+
+# 4. Copy application code
 COPY . .
 
-# 4. Expose service port
+# 5. Expose service port
 EXPOSE 8000
 
-# 5. Run Uvicorn directly (no runtime venv creation)
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# 6. Run FastAPI with CLI
+CMD ["fastapi", "run"]
