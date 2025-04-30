@@ -28,14 +28,6 @@ RUN uv sync --frozen
 # Copy application code - to get the proper directory structure
 COPY ./app .
 
-# Debug - check file structure
-RUN echo "==== DEBUG: Project file structure ====" && \
-    ls -la && \
-    echo "==== DEBUG: app directory ====" && \
-    ls -la app/ && \
-    echo "==== DEBUG: Finding main.py ====" && \
-    find / -name "main.py" 2>/dev/null | grep -v "__pycache__"
-
 # Expose service port
 EXPOSE 8000
 
