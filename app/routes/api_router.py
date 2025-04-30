@@ -1,13 +1,14 @@
 from typing import Dict, Optional
 from fastapi import Depends, HTTPException, status, APIRouter, Cookie
 from fastapi.responses import JSONResponse, Response
-from ..retrieval_gen.rag import run_rag
+from app.retrieval_gen.rag_gen import run_rag
 from langchain.memory import ConversationBufferMemory
 import uuid
 
 router = APIRouter()
 
 SESSION_MEMORY: Dict[str, ConversationBufferMemory] = {}
+
 
 async def get_session_id(session_id: Optional[str] = Cookie(None)) -> str:
     if session_id is None:
@@ -25,11 +26,12 @@ async def chat_ucc(query: str, response: Response, session_id: str = Depends(get
 
     Returns:
         JSONResponse: The response from the RAG system.
-        
+
     """
     try:
         if session_id not in SESSION_MEMORY:
-            SESSION_MEMORY[session_id] = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+            SESSION_MEMORY[session_id] = ConversationBufferMemory(
+                memory_key="chat_history", return_messages=True)
         memory = SESSION_MEMORY[session_id]
         # Convert chat history to plain text
         chat_history = memory.load_memory_variables({})['chat_history']
@@ -43,7 +45,8 @@ async def chat_ucc(query: str, response: Response, session_id: str = Depends(get
         response_text = rag_result["answer"]
         source_urls = [doc.metadata["url"] for doc in rag_result["context"]]
         memory.save_context({"input": query}, {"output": response_text})
-        json_response = JSONResponse(content={"response": response_text, "source_urls": source_urls})
+        json_response = JSONResponse(
+            content={"response": response_text, "source_urls": source_urls})
         json_response.set_cookie(key="session_id", value=session_id)
         return json_response
     except Exception as e:

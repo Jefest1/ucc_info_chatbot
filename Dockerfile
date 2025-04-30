@@ -26,7 +26,7 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen
 
 # Copy application code - to get the proper directory structure
-COPY . .
+COPY ./app .
 
 # Debug - check file structure
 RUN echo "==== DEBUG: Project file structure ====" && \
