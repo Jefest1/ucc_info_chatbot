@@ -1,12 +1,14 @@
 name: Deploy & Update ACI
 
 on:
+  pull_request:
+    branches: [main]
   push:
-    branches: [ main ]
+    branches: [main]
 concurrency:
-  group: 'deploy-aci-${{ github.ref }}'
+  group: "deploy-aci-${{ github.ref }}"
   cancel-in-progress: true
-  
+
 env:
   RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
   ACR_LOGIN_SERVER: ${{ secrets.REGISTRY_LOGIN_SERVER }}
@@ -41,4 +43,3 @@ jobs:
           az container restart \
             --resource-group ucc-rag-info \
             --name ucc-info-chatbot-ci
-
