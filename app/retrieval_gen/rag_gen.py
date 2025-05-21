@@ -34,7 +34,7 @@ def run_rag(query: str, chat_history: List[Dict[str, Any]] = []):
         embedding=embeddings,
         collection_name=settings.QDRANT_COLLECTION_NAME,
         client=QdrantClient(url=settings.QDRANT_URL,
-                            api_key=settings.QDRANT_API_KEY)
+                            api_key=settings.QDRANT_API_KEY, check_compatibility=False)
     )
 
     chat = ChatGroq(model_name="meta-llama/llama-4-scout-17b-16e-instruct",

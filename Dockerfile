@@ -1,8 +1,9 @@
 # syntax=docker/dockerfile:1
-FROM python:3.11
+FROM python:3.11-slim
 
 # Install build dependencies and tools
-RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl ca-certificates build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 # Download the latest installer
@@ -17,7 +18,7 @@ RUN sh /uv-installer.sh && rm /uv-installer.sh
 ENV PATH="/root/.local/bin/:$PATH"
 
 # Set workdir
-WORKDIR /app
+WORKDIR /src
 
 # Add dependency files
 COPY pyproject.toml uv.lock ./
@@ -26,7 +27,7 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen
 
 # Copy application code - to get the proper directory structure
-COPY ./app .
+COPY ./app ./app
 
 # Expose service port
 EXPOSE 8000
@@ -34,5 +35,5 @@ EXPOSE 8000
 
 # Run using uv and uvicorn
 # CMD [ "uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000" ]
-CMD [ "uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000" ]
+CMD [ "uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000" ]
 # CMD ["sleep", "infinity"]
